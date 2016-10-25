@@ -4,18 +4,23 @@ package com.ikamobile.common.proxy;
 import com.ikamobile.common.annotations.ParamAttr;
 import com.ikamobile.common.annotations.RequestInfo;
 
+import java.lang.reflect.Type;
+
 /**
  * Created by zhangcheng on 2016/10/12.
  */
 public class ApiAttr {
 
-    String url;
+    private String url;
 
-    RequestInfo.HttpMethod httpMethod;
+    private RequestInfo.HttpMethod httpMethod;
 
-    RequestInfo.PostType postType;
+    private RequestInfo.PostType postType;
 
-    ParameterAttr[] paramAttrs;
+    private ParameterAttr[] paramAttrs;
+
+    private Type returnType;
+
 
     public ParameterAttr[] getParamAttrs() {
         return paramAttrs;
@@ -24,10 +29,6 @@ public class ApiAttr {
     public void setParamAttrs(ParameterAttr[] paramAttrs) {
         this.paramAttrs = paramAttrs;
     }
-
-
-
-
 
     public RequestInfo.HttpMethod getHttpMethod() {
         return httpMethod;
@@ -51,6 +52,14 @@ public class ApiAttr {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public void setReturnType(Type returnType) {
+        this.returnType = returnType;
+    }
+
+    public Type getReturnType() {
+        return returnType;
     }
 
     public static class ParameterAttr {

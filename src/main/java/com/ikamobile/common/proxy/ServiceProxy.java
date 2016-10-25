@@ -1,12 +1,11 @@
 package com.ikamobile.common.proxy;
 
 import com.alibaba.fastjson.JSON;
+import com.ikamobile.common.annotations.ParamAttr;
 import com.ikamobile.common.annotations.RequestInfo;
 import com.ikamobile.common.utils.BeanUtils;
 import com.ikamobile.common.utils.HttpsUtils;
-import com.ikamobile.common.utils.MD5Utils;
 import org.apache.commons.lang3.StringUtils;
-import com.ikamobile.common.annotations.ParamAttr;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -58,13 +57,11 @@ public class ServiceProxy implements InvocationHandler {
         }else if(apiAttr.getHttpMethod().equals(RequestInfo.HttpMethod.POST)){
             if(apiAttr.getPostType().equals(RequestInfo.PostType.FORM)){
                 ret = HttpsUtils.postForm(url, BeanUtils.bean2Map(apiParams.getContentParam()));
-            }else if(apiAttr.getPostType().equals(RequestInfo.PostType.JSON)){
+            }else if(apiAttr.getPostType().equals(RequestInfo.PostType.JSON)){//TODO 也可能是XML文本
                 ret = HttpsUtils.postJSON(url, JSON.toJSONString(apiParams.getContentParam()));
             }
         }
-        System.out.println("result:"+ret);
-        System.out.println(method.getReturnType().getName());
-        Object o = JSON.parseObject(ret, method.getReturnType());
+        Object o = JSON.parseObject(ret, apiAttr.getReturnType());//或者是有XML解析为对象
         return o;
     }
 
@@ -111,6 +108,7 @@ public class ServiceProxy implements InvocationHandler {
                 pas[i] = pa;
             }
             apiAttr.setParamAttrs(pas);
+            apiAttr.setReturnType(method.getGenericReturnType());
             apiAttrMap.put(key, apiAttr);
             return apiAttr;
         }
